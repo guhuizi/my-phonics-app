@@ -7,8 +7,8 @@ const GAME_MODES = {
     id: 'picture',
     name: '看词选图',
     emoji: '🖼️',
-    objective: '看图片，听发音，选出对应的单词！',
-    instruction: '仔细看图片，听发音，选出正确的单词'
+    objective: '看单词，听发音，选出对应的图片！',
+    instruction: '仔细看单词，听发音，选出正确的图片'
   },
   listen: {
     id: 'listen',
@@ -61,6 +61,17 @@ function generateRuleOptions(correctRule, level, allData) {
   return shuffleArray(options);
 }
 
+function generatePictureOptions(correctEmoji, level) {
+  const sameLevelItems = phonicsData
+    .filter(item => item.level === level && item.emoji !== correctEmoji);
+
+  const sameLevelEmojis = sameLevelItems.map(item => item.emoji);
+  const shuffledSame = shuffleArray(sameLevelEmojis).slice(0, 3);
+
+  const options = [...shuffledSame, correctEmoji];
+  return shuffleArray(options);
+}
+
 function PhonicsGame({ mode = 'rule', onBack }) {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -81,12 +92,14 @@ function PhonicsGame({ mode = 'rule', onBack }) {
     if (questions.length === 0 || gameOver) return;
 
     const q = questions[currentIndex];
-    const ruleOptions = generateRuleOptions(q.rule, currentLevel, phonicsData);
-    setOptions(ruleOptions);
 
-    if (mode === 'picture' || mode === 'listen') {
+    if (mode === 'picture') {
+      const picOptions = generatePictureOptions(q.emoji, currentLevel);
+      setOptions(picOptions);
       setTimeout(() => speak(q.word), 500);
-    } else if (mode === 'rule') {
+    } else {
+      const ruleOptions = generateRuleOptions(q.rule, currentLevel, phonicsData);
+      setOptions(ruleOptions);
       setTimeout(() => speak(q.word), 500);
     }
 
@@ -203,7 +216,9 @@ function PhonicsGame({ mode = 'rule', onBack }) {
   const handleOptionClick = (option) => {
     if (showResult) return;
 
-    const correct = option === currentQuestion.rule;
+    const correct = mode === 'picture'
+      ? option === currentQuestion.emoji
+      : option === currentQuestion.rule;
     setIsCorrect(correct);
     setShowResult(true);
 
@@ -270,8 +285,8 @@ function PhonicsGame({ mode = 'rule', onBack }) {
           {mode === 'picture' && (
             <div>
               <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-4 mb-4">
-                <p className="text-4xl md:text-5xl mb-2">{currentQuestion.emoji}</p>
-                <p className="text-gray-600">这个图片代表哪个单词？</p>
+                <p className="text-4xl md:text-5xl font-bold text-purple-700 mb-2">{currentQuestion.word}</p>
+                <p className="text-gray-600">这个单词对应哪张图片？</p>
               </div>
               <button
                 onClick={replaySound}
@@ -352,7 +367,7 @@ function PhonicsGame({ mode = 'rule', onBack }) {
         {showResult && (
           <div className={`mt-4 text-center p-3 rounded-xl ${isCorrect ? 'bg-green-400/80' : 'bg-red-400/80'}`}>
             <p className="text-white text-lg md:text-xl font-bold">
-              {isCorrect ? '🎉 正确！太棒了！' : `😅 答错了，正确答案是 ${currentQuestion.rule}`}
+              {isCorrect ? '🎉 正确！太棒了！' : `😅 答错了，正确答案是 ${mode === 'picture' ? currentQuestion.emoji + ' ' + currentQuestion.word : currentQuestion.rule}`}
             </p>
           </div>
         )}
