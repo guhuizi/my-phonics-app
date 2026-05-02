@@ -3,9 +3,34 @@ import { speak, stopSpeaking } from '../utils/tts';
 import { phonicsData } from '../data/rules';
 
 const GAME_MODES = {
-  picture: { id: 'picture', name: '看词选图', emoji: '🖼️' },
-  listen: { id: 'listen', name: '听音选词', emoji: '🎧' },
-  rule: { id: 'rule', name: '看词选规', emoji: '📖' },
+  picture: {
+    id: 'picture',
+    name: '看词选图',
+    emoji: '🖼️',
+    objective: '看图片，听发音，选出对应的单词！',
+    instruction: '仔细看图片，听发音，选出正确的单词'
+  },
+  listen: {
+    id: 'listen',
+    name: '听音选词',
+    emoji: '🎧',
+    objective: '听发音，选出单词对应的字母组合！',
+    instruction: '仔细听发音，选出单词中的字母组合'
+  },
+  rule: {
+    id: 'rule',
+    name: '看词选规',
+    emoji: '📖',
+    objective: '看单词，选出正确的字母组合！',
+    instruction: '根据提示的翻译和空格，选出正确的字母组合'
+  },
+  adventure: {
+    id: 'adventure',
+    name: '闯关挑战',
+    emoji: '🚀',
+    objective: '连续答对7道题即可过关，挑战全部6关！',
+    instruction: '每关8道题，答对7道以上解锁下一关'
+  }
 };
 
 const MINT_COLORS = [
@@ -222,6 +247,12 @@ function PhonicsGame({ mode = 'rule', onBack }) {
             {gameMode?.emoji} {gameMode?.name} · 第 {currentLevel} 关
           </span>
         </div>
+        <p className="text-white/90 text-base md:text-lg mt-3 font-medium">
+          🎯 {gameMode?.objective}
+        </p>
+        <p className="text-white/60 text-sm mt-1">
+          {gameMode?.instruction}
+        </p>
       </div>
 
       <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-2xl max-w-lg w-full mb-6">
