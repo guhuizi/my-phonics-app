@@ -14,8 +14,8 @@ const GAME_MODES = {
     id: 'listen',
     name: '听音选词',
     emoji: '🎧',
-    objective: '听发音，选出单词对应的字母组合！',
-    instruction: '仔细听发音，选出单词中的字母组合'
+    objective: '听发音，选出正确的单词！',
+    instruction: '仔细听发音，选出单词的正确拼写'
   },
   rule: {
     id: 'rule',
@@ -72,6 +72,17 @@ function generatePictureOptions(correctEmoji, level) {
   return shuffleArray(options);
 }
 
+function generateWordOptions(correctWord, level) {
+  const sameLevelItems = phonicsData
+    .filter(item => item.level === level && item.word !== correctWord);
+
+  const sameLevelWords = sameLevelItems.map(item => item.word);
+  const shuffledSame = shuffleArray(sameLevelWords).slice(0, 3);
+
+  const options = [...shuffledSame, correctWord];
+  return shuffleArray(options);
+}
+
 function PhonicsGame({ mode = 'rule', onBack }) {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -96,6 +107,10 @@ function PhonicsGame({ mode = 'rule', onBack }) {
     if (mode === 'picture') {
       const picOptions = generatePictureOptions(q.emoji, currentLevel);
       setOptions(picOptions);
+      setTimeout(() => speak(q.word), 500);
+    } else if (mode === 'listen') {
+      const wordOpts = generateWordOptions(q.word, currentLevel);
+      setOptions(wordOpts);
       setTimeout(() => speak(q.word), 500);
     } else {
       const ruleOptions = generateRuleOptions(q.rule, currentLevel, phonicsData);
@@ -218,7 +233,9 @@ function PhonicsGame({ mode = 'rule', onBack }) {
 
     const correct = mode === 'picture'
       ? option === currentQuestion.emoji
-      : option === currentQuestion.rule;
+      : mode === 'listen'
+        ? option === currentQuestion.word
+        : option === currentQuestion.rule;
     setIsCorrect(correct);
     setShowResult(true);
 
@@ -301,8 +318,8 @@ function PhonicsGame({ mode = 'rule', onBack }) {
           {mode === 'listen' && (
             <div>
               <div className="bg-gradient-to-r from-cyan-100 to-blue-100 rounded-2xl p-4 mb-4">
-                <p className="text-gray-600 mb-2">听音选词</p>
-                <p className="text-gray-500 text-sm">意思：{currentQuestion.translation}</p>
+                <p className="text-gray-600 mb-2">🎧 听音选词</p>
+                <p className="text-gray-500 text-sm">提示：{currentQuestion.translation} {currentQuestion.emoji}</p>
               </div>
               <button
                 onClick={replaySound}
@@ -367,7 +384,7 @@ function PhonicsGame({ mode = 'rule', onBack }) {
         {showResult && (
           <div className={`mt-4 text-center p-3 rounded-xl ${isCorrect ? 'bg-green-400/80' : 'bg-red-400/80'}`}>
             <p className="text-white text-lg md:text-xl font-bold">
-              {isCorrect ? '🎉 正确！太棒了！' : `😅 答错了，正确答案是 ${mode === 'picture' ? currentQuestion.emoji + ' ' + currentQuestion.word : currentQuestion.rule}`}
+              {isCorrect ? '🎉 正确！太棒了！' : `😅 答错了，正确答案是 ${mode === 'picture' ? currentQuestion.emoji + ' ' + currentQuestion.word : mode === 'listen' ? currentQuestion.word : currentQuestion.rule}`}
             </p>
           </div>
         )}
