@@ -11,13 +11,24 @@ const speak = (text, lang = 'en-US') => {
   utterance.rate = 0.8;
   utterance.pitch = 1.1;
 
+  const setVoice = () => {
+    const voices = window.speechSynthesis.getVoices();
+    const englishVoice = voices.find(v => v.lang.startsWith('en'));
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+    }
+    window.speechSynthesis.speak(utterance);
+  };
+
   const voices = window.speechSynthesis.getVoices();
-  const englishVoice = voices.find(v => v.lang.startsWith('en'));
-  if (englishVoice) {
-    utterance.voice = englishVoice;
+  if (voices.length > 0) {
+    setVoice();
+  } else {
+    window.speechSynthesis.addEventListener('voiceschanged', () => {
+      setVoice();
+    }, { once: true });
   }
 
-  window.speechSynthesis.speak(utterance);
   return utterance;
 };
 

@@ -19,6 +19,7 @@ function LearnMode({ onBack }) {
   const [showResult, setShowResult] = useState(false);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
+  const audioRef = useRef(null);
 
   const levelData = phonicsData.filter(item => item.level === currentLevel);
   const currentItem = levelData[currentIndex];
@@ -78,9 +79,8 @@ function LearnMode({ onBack }) {
   };
 
   const playRecording = () => {
-    if (recordedText) {
-      const audio = new Audio(recordedText);
-      audio.play();
+    if (recordedText && audioRef.current) {
+      audioRef.current.play();
     }
   };
 
@@ -121,6 +121,7 @@ function LearnMode({ onBack }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      <audio ref={audioRef} src={recordedText} />
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
           <button
