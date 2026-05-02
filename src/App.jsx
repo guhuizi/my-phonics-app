@@ -36,8 +36,10 @@ function HomeScreen({ onStartGame }) {
 
       <div className="relative z-10 text-center px-6">
         <div className="mb-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg mb-3">
-            🌟 自然拼读大冒险 🌟
+          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg mb-3 flex items-center justify-center gap-2">
+            <span>🌟</span>
+            <span>自然拼读大冒险</span>
+            <span>🌟</span>
           </h1>
           <p className="text-xl md:text-2xl text-pink-200 font-medium">
             Phonics Adventure

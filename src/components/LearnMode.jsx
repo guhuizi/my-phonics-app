@@ -169,22 +169,22 @@ function LearnMode({ onBack }) {
                 <p className="text-2xl text-pink-500">{currentItem.phonetic}</p>
               </div>
 
-              <div className="flex justify-center gap-3 mt-4">
+              <div className="flex justify-center gap-3 flex-wrap">
                 <button
                   onClick={playRuleSound}
-                  className="px-4 py-2 bg-purple-400 text-white rounded-xl font-bold hover:bg-purple-500 transition-all"
+                  className="px-4 py-2 bg-purple-400 text-white rounded-xl font-bold hover:bg-purple-500 transition-all whitespace-nowrap"
                 >
                   🔊 规则
                 </button>
                 <button
                   onClick={playWordSound}
-                  className="px-4 py-2 bg-pink-400 text-white rounded-xl font-bold hover:bg-pink-500 transition-all"
+                  className="px-4 py-2 bg-pink-400 text-white rounded-xl font-bold hover:bg-pink-500 transition-all whitespace-nowrap"
                 >
                   🔤 单词
                 </button>
                 <button
                   onClick={playBoth}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-xl font-bold hover:scale-105 transition-all"
+                  className="px-4 py-2 bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-xl font-bold hover:scale-105 transition-all whitespace-nowrap"
                 >
                   🎵 连续
                 </button>
