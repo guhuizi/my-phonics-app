@@ -289,9 +289,11 @@ function PhonicsGame({ mode = 'rule', onBack }) {
             </div>
           )}
 
-          {mode === 'rule' && (
+          {mode === 'rule' || mode === 'adventure' ? (
             <div>
-              <p className="text-gray-500 mb-3">✨ 请为单词填上正确的字母组合！</p>
+              <p className="text-gray-500 mb-3">
+                {mode === 'adventure' ? '🎯 找出单词中包含的字母组合！' : '✨ 请为单词填上正确的字母组合！'}
+              </p>
               <div className="inline-flex items-center justify-center mb-3">
                 <span className="text-4xl md:text-5xl font-bold text-purple-700">{before}</span>
                 <span className="w-12 md:w-16 h-2 bg-pink-400 rounded-full mx-1 animate-pulse"></span>
@@ -308,7 +310,7 @@ function PhonicsGame({ mode = 'rule', onBack }) {
                 🔊 发音
               </button>
             </div>
-          )}
+          ) : null}
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:gap-4">
