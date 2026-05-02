@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { speak, stopSpeaking } from '../utils/tts';
 import { phonicsData } from '../data/rules';
+import { playCorrectSound, playWrongSound, playClickSound, playSuccessSound, playGameOverSound } from '../utils/sfx';
 
 const GAME_MODES = {
   picture: {
@@ -121,6 +122,16 @@ function PhonicsGame({ mode = 'rule', onBack }) {
     return () => stopSpeaking();
   }, [currentIndex, questions, gameOver, mode, currentLevel]);
 
+  useEffect(() => {
+    if (gameOver) {
+      if (score >= questions.length * 7) {
+        playSuccessSound();
+      } else {
+        playGameOverSound();
+      }
+    }
+  }, [gameOver]);
+
   if (questions.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -157,6 +168,7 @@ function PhonicsGame({ mode = 'rule', onBack }) {
             {passed && currentLevel < 6 ? (
               <button
                 onClick={() => {
+                  playClickSound();
                   setCurrentLevel(nextLevel);
                   setCurrentIndex(0);
                   setScore(0);
@@ -173,6 +185,7 @@ function PhonicsGame({ mode = 'rule', onBack }) {
             ) : (
               <button
                 onClick={() => {
+                  playClickSound();
                   const levelData = phonicsData.filter(item => item.level === currentLevel);
                   const shuffled = shuffleArray(levelData).slice(0, 8);
                   setQuestions(shuffled);
@@ -191,7 +204,10 @@ function PhonicsGame({ mode = 'rule', onBack }) {
             )}
 
             <button
-              onClick={onBack}
+              onClick={() => {
+                playClickSound();
+                onBack();
+              }}
               className="px-6 py-3 bg-gray-200 text-gray-700 font-bold rounded-2xl
                          hover:bg-gray-300 transition-all duration-300"
             >
@@ -231,6 +247,8 @@ function PhonicsGame({ mode = 'rule', onBack }) {
   const handleOptionClick = (option) => {
     if (showResult) return;
 
+    playClickSound();
+
     const correct = mode === 'picture'
       ? option === currentQuestion.emoji
       : mode === 'listen'
@@ -241,6 +259,9 @@ function PhonicsGame({ mode = 'rule', onBack }) {
 
     if (correct) {
       setScore(prev => prev + 10);
+      playCorrectSound();
+    } else {
+      playWrongSound();
     }
 
     setTimeout(() => {
@@ -265,7 +286,10 @@ function PhonicsGame({ mode = 'rule', onBack }) {
     <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-6">
       <div className="absolute top-4 left-4">
         <button
-          onClick={onBack}
+          onClick={() => {
+            playClickSound();
+            onBack();
+          }}
           className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white font-bold rounded-xl
                      hover:bg-white/30 transition-all duration-300 shadow-lg text-sm md:text-base"
         >
