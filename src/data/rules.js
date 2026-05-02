@@ -33,7 +33,7 @@ export const phonicsData = [
   { id: "v_at", rule: "at", phonetic: "/æt/", category: "短元音组合", level: 2, word: "cat", translation: "猫", emoji: "🐱", options: ["at", "an", "ad", "ap"] },
   { id: "v_an", rule: "an", phonetic: "/æn/", category: "短元音组合", level: 2, word: "fan", translation: "风扇", emoji: "🌀", options: ["an", "at", "en", "in"] },
   { id: "v_in", rule: "in", phonetic: "/ɪn/", category: "短元音组合", level: 2, word: "pin", translation: "别针", emoji: "📌", options: ["in", "an", "en", "on"] },
-  { id: "v_on", rule: "on", phonetic: "/ɒn/", category: "短元音组合", level: 2, word: "dog", translation: "狗", emoji: "🐕", options: ["on", "an", "in", "un"] },
+  { id: "v_on", rule: "on", phonetic: "/ɒn/", category: "短元音组合", level: 2, word: "on", translation: "在...上面", emoji: "🔛", options: ["on", "an", "in", "un"] },
   { id: "v_et", rule: "et", phonetic: "/et/", category: "短元音组合", level: 2, word: "pet", translation: "宠物", emoji: "🐾", options: ["et", "at", "it", "ot"] },
   { id: "v_ed", rule: "ed", phonetic: "/d/", category: "短元音组合", level: 2, word: "bed", translation: "床", emoji: "🛏️", options: ["ed", "ad", "id", "od"] },
   { id: "v_ug", rule: "ug", phonetic: "/ʌg/", category: "短元音组合", level: 2, word: "bug", translation: "虫子", emoji: "🐛", options: ["ug", "ag", "ig", "og"] },

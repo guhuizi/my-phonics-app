@@ -180,8 +180,18 @@ function PhonicsGame({ mode = 'rule', onBack }) {
   const getHintWord = () => {
     const word = currentQuestion.word.toLowerCase();
     const rule = currentQuestion.rule.toLowerCase();
-    const index = word.indexOf(rule);
 
+    if (rule.includes('_e')) {
+      const vowel = rule.replace('_e', '');
+      const vowelIndex = word.indexOf(vowel);
+      if (vowelIndex !== -1) {
+        const before = word.substring(0, vowelIndex);
+        const after = word.substring(vowelIndex + vowel.length, word.length - 1);
+        return { before, after };
+      }
+    }
+
+    const index = word.indexOf(rule);
     if (index !== -1) {
       const before = word.substring(0, index);
       const after = word.substring(index + rule.length);
