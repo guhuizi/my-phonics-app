@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { speak, stopSpeaking } from '../utils/tts';
+import { speak, stopSpeaking, isSpeechSupported } from '../utils/tts';
 import { phonicsData } from '../data/rules';
 
 const LEVELS = [
@@ -152,6 +152,11 @@ function LearnMode({ onBack }) {
         </div>
 
         <div className="max-w-md mx-auto">
+          {!isSpeechSupported() && (
+            <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-xl mb-4 text-center">
+              ⚠️ 您的设备不支持语音功能，请使用 Chrome、Safari 或 Edge 浏览器
+            </div>
+          )}
           <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-2xl">
             <div className="text-center mb-4">
               <div className={`inline-block px-4 py-1 rounded-full bg-gradient-to-r ${currentLevelInfo.color} text-white text-sm font-bold mb-3`}>

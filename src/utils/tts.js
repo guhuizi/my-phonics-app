@@ -1,7 +1,7 @@
 const speak = (text, lang = 'en-US') => {
   if (!window.speechSynthesis) {
     console.warn('Speech synthesis not supported');
-    return;
+    return null;
   }
 
   window.speechSynthesis.cancel();
@@ -11,12 +11,29 @@ const speak = (text, lang = 'en-US') => {
   utterance.rate = 0.8;
   utterance.pitch = 1.1;
 
+  let voiceSet = false;
+
   const setVoice = () => {
     const voices = window.speechSynthesis.getVoices();
+    let selectedVoice = null;
+
     const englishVoice = voices.find(v => v.lang.startsWith('en'));
     if (englishVoice) {
-      utterance.voice = englishVoice;
+      selectedVoice = englishVoice;
+    } else if (voices.length > 0) {
+      selectedVoice = voices[0];
     }
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      voiceSet = true;
+    }
+
+    utterance.onend = () => {};
+    utterance.onerror = (e) => {
+      console.warn('Speech synthesis error:', e);
+    };
+
     window.speechSynthesis.speak(utterance);
   };
 
@@ -27,6 +44,17 @@ const speak = (text, lang = 'en-US') => {
     window.speechSynthesis.addEventListener('voiceschanged', () => {
       setVoice();
     }, { once: true });
+
+    setTimeout(() => {
+      if (!voiceSet) {
+        const voicesNow = window.speechSynthesis.getVoices();
+        if (voicesNow.length > 0) {
+          setVoice();
+        } else {
+          window.speechSynthesis.speak(utterance);
+        }
+      }
+    }, 100);
   }
 
   return utterance;
@@ -38,4 +66,8 @@ const stopSpeaking = () => {
   }
 };
 
-export { speak, stopSpeaking };
+const isSpeechSupported = () => {
+  return !!(window.speechSynthesis);
+};
+
+export { speak, stopSpeaking, isSpeechSupported };
